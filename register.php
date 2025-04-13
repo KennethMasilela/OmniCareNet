@@ -1,19 +1,11 @@
-<?php 
-session_start();
-
-// Redirect if already logged in
-if (isset($_SESSION['account_loggedin'])) {
-    header('Location: home.php');
-    exit;
-}
-?>
-
+<?php session_start(); ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Reset Password</title>
+  <title>Register - OmniCareNet</title>
+  <link rel="stylesheet" href="style.css" />
   <style>
     * {
       box-sizing: border-box;
@@ -37,7 +29,7 @@ if (isset($_SESSION['account_loggedin'])) {
       color: #e0e0e0;
     }
 
-    .login-container {
+    .register-container {
       background-color: #ffffffee;
       padding: 22px 18px;
       border-radius: 12px;
@@ -46,20 +38,19 @@ if (isset($_SESSION['account_loggedin'])) {
       max-width: 340px;
     }
 
-    body.dark .login-container {
+    body.dark .register-container {
       background-color: #2e2e3f;
       color: #e0e0e0;
     }
 
-    .login-container h2 {
+    h2 {
       text-align: center;
       margin-bottom: 18px;
-      font-size: 18px;
-      font-weight: 600;
       color: #1a3d5d;
+      font-size: 18px;
     }
 
-    body.dark .login-container h2 {
+    body.dark h2 {
       color: #e0e0e0;
     }
 
@@ -68,14 +59,14 @@ if (isset($_SESSION['account_loggedin'])) {
       position: relative;
     }
 
-    .form-group label {
+    label {
       display: block;
       margin-bottom: 3px;
-      font-size: 12px;
       font-weight: 500;
+      font-size: 12px;
     }
 
-    .form-group input {
+    input {
       width: 100%;
       padding: 7px 34px 7px 28px;
       border-radius: 6px;
@@ -83,7 +74,7 @@ if (isset($_SESSION['account_loggedin'])) {
       font-size: 13px;
     }
 
-    body.dark .form-group input {
+    body.dark input {
       background-color: #444;
       color: #eee;
       border: 1px solid #666;
@@ -124,24 +115,6 @@ if (isset($_SESSION['account_loggedin'])) {
       background-color: #1d8ec0;
     }
 
-    #error {
-      color: red;
-      font-size: 13px;
-      text-align: center;
-      display: none;
-      margin-bottom: 10px;
-    }
-
-    .theme-toggle {
-      position: absolute;
-      top: 15px;
-      right: 15px;
-      font-size: 18px;
-      background: none;
-      border: none;
-      cursor: pointer;
-    }
-
     .extra-links {
       text-align: center;
       margin-top: 12px;
@@ -157,18 +130,28 @@ if (isset($_SESSION['account_loggedin'])) {
       text-decoration: underline;
     }
 
-    #password-requirements {
+    .theme-toggle {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      font-size: 18px;
+      background: none;
+      border: none;
+      cursor: pointer;
+    }
+
+    .error-msg {
+      color: red;
+      font-size: 13px;
+      text-align: center;
+      margin-bottom: 10px;
+      display: none;
+    }
+
+    .password-requirements {
       font-size: 12px;
-      margin-top: 5px;
-      color: #444;
-    }
-
-    #password-requirements li {
-      margin-left: 18px;
-    }
-
-    body.dark #password-requirements {
-      color: #ddd;
+      margin: 8px 0 14px;
+      padding-left: 20px;
     }
 
     .password-requirements li {
@@ -198,28 +181,32 @@ if (isset($_SESSION['account_loggedin'])) {
 
   <button class="theme-toggle" title="Toggle theme" onclick="toggleTheme()" id="theme-icon">🌙</button>
 
-  <div class="login-container">
-    <?php if (isset($_SESSION['success_message'])): ?>
-      <div class="success">
-        <?= $_SESSION['success_message']; ?>
-        <?php unset($_SESSION['success_message']); ?>
+  <div class="register-container">
+    <h2>Create Your Account</h2>
+    <form id="registerForm" action="register_handler.php" method="POST">
+      <div class="form-group">
+        <label for="fullname">Full Name</label>
+        <span class="form-icon">📝</span>
+        <input type="text" name="fullname" required placeholder="Enter your full name" />
       </div>
-    <?php endif; ?>
 
-    <h2>Reset Your Password</h2>
-    <form action="reset_password_handler.php" method="post">
+      <div class="form-group">
+        <label for="username">Username</label>
+        <span class="form-icon">👤</span>
+        <input type="text" name="username" id="username" placeholder="Choose a username" required />
+      </div>
+
       <div class="form-group">
         <label for="email">Email</label>
         <span class="form-icon">📧</span>
-        <input type="email" name="email" id="email" placeholder="Enter your email" required />
+        <input type="email" name="email" id="email" placeholder="you@example.com" required />
       </div>
 
       <div class="form-group">
-        <label for="new_password">New Password</label>
-        <span class="form-icon">🔐</span>
-        <input type="password" name="new_password" id="new_password" placeholder="Enter new password" required />
-        <span class="toggle-password" onclick="toggleVisibility(this, 'new_password')" data-visible="false">🙈</span>
-
+        <label for="password">Password</label>
+        <span class="form-icon">🔒</span>
+        <input type="password" name="password" id="password" placeholder="Create a password" required />
+        <span class="toggle-password" onclick="toggleVisibility(this, 'password')" data-visible="false">🙈</span>
       </div>
 
       <ul class="password-requirements" id="requirements">
@@ -227,22 +214,22 @@ if (isset($_SESSION['account_loggedin'])) {
         <li id="number" style="color: red;"><span class="emoji">❌</span> At least one number</li>
         <li id="special" style="color: red;"><span class="emoji">❌</span> At least one special character</li>
       </ul>
-      
 
       <div class="form-group">
         <label for="confirm_password">Confirm Password</label>
-        <span class="form-icon">✅</span>
-        <input type="password" name="confirm_password" id="confirm_password" placeholder="Confirm password" required />
+        <span class="form-icon">🔁</span>
+        <input type="password" name="confirm_password" id="confirm_password" placeholder="Repeat password" required />
         <span class="toggle-password" onclick="toggleVisibility(this, 'confirm_password')" data-visible="false">🙈</span>
-
       </div>
 
-      <p id="error">Passwords do not match.</p>
-      <button type="submit" class="btn">Reset Password</button>
+      <p class="error-msg" id="error-msg">⚠️ Passwords do not match!</p>
+
+      <button type="submit" class="btn">Register</button>
     </form>
 
     <div class="extra-links">
-      <p><a href="login.php">Back to Login</a></p>
+      <p>Already have an account? <a href="login.php">Login</a></p>
+      <p><a href="home.php">Back to Home</a></p>
     </div>
   </div>
 
@@ -252,38 +239,26 @@ if (isset($_SESSION['account_loggedin'])) {
       const input = document.getElementById(fieldId);
       const isVisible = toggleIcon.getAttribute("data-visible") === "true";
 
-    input.type = isVisible ? "password" : "text";
-    toggleIcon.setAttribute("data-visible", !isVisible);
-    toggleIcon.textContent = isVisible ? "🙈" : "👁️";
-  }
+      input.type = isVisible ? "password" : "text";
+      toggleIcon.setAttribute("data-visible", !isVisible);
+      toggleIcon.textContent = isVisible ? "🙈" : "👁️";
+    }
 
-
-    // Password match and requirement check
-    document.querySelector("form").addEventListener("submit", function (e) {
-      const pass = document.getElementById("new_password").value;
+    // Password match check
+    document.getElementById("registerForm").addEventListener("submit", function (e) {
+      const pass = document.getElementById("password").value;
       const confirm = document.getElementById("confirm_password").value;
-      const errorMsg = document.getElementById("error");
-
-      const isValid =
-        pass.length >= 8 &&
-        /\d/.test(pass) &&
-        /[!@#$%^&*(),.?":{}|<>]/.test(pass);
+      const errorMsg = document.getElementById("error-msg");
 
       if (pass !== confirm) {
         e.preventDefault();
-        errorMsg.textContent = "❌ Passwords do not match.";
-        errorMsg.style.display = "block";
-      } else if (!isValid) {
-        e.preventDefault();
-        errorMsg.textContent = "❌ Password does not meet the requirements.";
         errorMsg.style.display = "block";
       } else {
         errorMsg.style.display = "none";
       }
     });
 
-    // Password requirements validation
-    document.getElementById("new_password").addEventListener("input", function () {
+    document.getElementById("password").addEventListener("input", function () {
       const value = this.value;
 
       const lengthEl = document.getElementById("length");
