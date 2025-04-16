@@ -2,6 +2,10 @@
 session_start();
 require 'db.php'; // Uses $pdo
 require 'mail_config.php'; // Your PHPMailer setup
+require 'vendor/autoload.php'; // PHPMailer autoload
+
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
 
 // Grab form data
 $email = $_POST['email'] ?? '';
@@ -38,23 +42,21 @@ if ($new_password !== $confirm_password) {
 
 // Hash and update password
 $hashed_password = password_hash($new_password, PASSWORD_DEFAULT);
-$update = $pdo->prepare("UPDATE users SET password = ? WHERE email = ?");
+$update = $pdo->prepare("UPDATE users SET password_hash = ? WHERE email = ?");
 $update->execute([$hashed_password, $email]);
 
 // Send confirmation email
-use PHPMailer\PHPMailer\PHPMailer;
-
 $mail = new PHPMailer(true);
 try {
     $mail->isSMTP();
     $mail->Host = 'smtp.gmail.com';
     $mail->SMTPAuth = true;
-    $mail->Username = 'testuser@example.com'; // Your email
-    $mail->Password = 'dummy'; // Your app password
+    $mail->Username = 'kennethmasilela.githubproject@gmail.com'; // Your email
+    $mail->Password = 'K3nneth36812!'; // Your app password
     $mail->SMTPSecure = 'tls';
     $mail->Port = 587;
 
-    $mail->setFrom('testuser@example.com', 'OmniCareNet');
+    $mail->setFrom('no-reply@omnicarenet.com', 'OmniCareNet');
     $mail->addAddress($email);
 
     $mail->isHTML(true);
@@ -63,11 +65,13 @@ try {
 
     $mail->send();
 } catch (Exception $e) {
+    // Optional: You can store this to a log file instead in production
     error_log("Mailer Error: " . $mail->ErrorInfo);
 }
 
-// ✅ Redirect to login page with success message
+// Redirect with success
 $_SESSION['success_message'] = "✅ You have successfully created a new password.";
 header("Location: login.php");
 exit();
 ?>
+

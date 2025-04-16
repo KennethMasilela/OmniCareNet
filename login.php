@@ -6,6 +6,11 @@ if (isset($_SESSION['account_loggedin'])) {
     header('Location: home.php');
     exit;
 }
+
+if (isset($_SESSION['success_message'])) {
+  echo '<div class="success-message">' . $_SESSION['success_message'] . '</div>';
+  unset($_SESSION['success_message']); // Clear the message after displaying it
+}
 ?>
 
 <!DOCTYPE html>
@@ -14,6 +19,8 @@ if (isset($_SESSION['account_loggedin'])) {
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>OmniCareNet Login</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
   <style>
     * {
       box-sizing: border-box;
@@ -188,7 +195,7 @@ if (isset($_SESSION['account_loggedin'])) {
       </div>
     <?php endif; ?>
 
-    <h2>Welcome to OmniCareNet 👋</h2>
+    <h2>Welcome to OmniCareNet</h2>
 
     <?php
       $errorMessage = '';
@@ -200,20 +207,21 @@ if (isset($_SESSION['account_loggedin'])) {
     <form action="authenticate.php" method="post" class="form">
       <div class="form-group">
         <label for="username">Username</label>
-        <span class="form-icon">👤</span>
+        <span class="form-icon"><i class="fas fa-user-alt"></i></span>
         <input type="text" name="username" id="username" placeholder="Enter your username" required class="<?= isset($_GET['error']) ? 'error' : '' ?>" />
       </div>
 
       <div class="form-group">
         <label for="password">Password</label>
-        <span class="form-icon">🔒</span>
+        <span class="form-icon"><i class="fas fa-lock"></i></span>
         <input type="password" name="password" id="password" placeholder="Enter your password" required class="<?= isset($_GET['error']) ? 'error' : '' ?>" />
-        <span id="togglePassword" class="toggle-password">👁️</span>
+        <span class="toggle-password" onclick="toggleVisibility(this, 'password')" data-visible="false"><i class="fas fa-eye-slash"></i></span>
       </div>
 
-      <p id="error" style="<?= $errorMessage ? 'display:block;' : 'display:none;' ?>">
-        <?= $errorMessage ?: 'Please fill in all fields.' ?>
+      <p id="error" style="display: <?= !empty($errorMessage) ? 'block' : 'none' ?>;">
+        <?= !empty($errorMessage) ? htmlspecialchars($errorMessage) : 'Please fill in all fields.' ?>
       </p>
+
 
       <button type="submit" class="btn">Login</button>
     </form>
@@ -227,13 +235,19 @@ if (isset($_SESSION['account_loggedin'])) {
 
   <script src="theme.js"></script>
   <script>
-    const togglePassword = document.getElementById("togglePassword");
-    const passwordInput = document.getElementById("password");
+  
+    function toggleVisibility(toggleIcon, inputId) {
+      const input = document.getElementById(inputId);
+      const icon = toggleIcon.querySelector("i");
+      const isVisible = toggleIcon.getAttribute("data-visible") === "true";
 
-    togglePassword.addEventListener("click", function () {
-      const type = passwordInput.getAttribute("type") === "password" ? "text" : "password";
-      passwordInput.setAttribute("type", type);
-    });
+      input.type = isVisible ? "password" : "text";
+      toggleIcon.setAttribute("data-visible", !isVisible);
+
+      icon.classList.remove(isVisible ? "fa-eye" : "fa-eye-slash");
+      icon.classList.add(isVisible ? "fa-eye-slash" : "fa-eye");
+    }
+
 
     // Basic client-side validation
     document.querySelector("form").addEventListener("submit", function (event) {

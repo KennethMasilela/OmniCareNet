@@ -14,6 +14,8 @@ if (isset($_SESSION['account_loggedin'])) {
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Reset Password</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
     * {
       box-sizing: border-box;
@@ -210,33 +212,39 @@ if (isset($_SESSION['account_loggedin'])) {
     <form action="reset_password_handler.php" method="post">
       <div class="form-group">
         <label for="email">Email</label>
-        <span class="form-icon">📧</span>
+        <span class="form-icon"><i class="fas fa-envelope"></i></span>
         <input type="email" name="email" id="email" placeholder="Enter your email" required />
       </div>
 
       <div class="form-group">
         <label for="new_password">New Password</label>
-        <span class="form-icon">🔐</span>
+        <span class="form-icon"><i class="fas fa-lock"></i></span>
         <input type="password" name="new_password" id="new_password" placeholder="Enter new password" required />
-        <span class="toggle-password" onclick="toggleVisibility(this, 'new_password')" data-visible="false">🙈</span>
-
+        <span class="toggle-password" onclick="toggleVisibility(this, 'new_password')" data-visible="false"><i class="fas fa-eye-slash"></i></span>
       </div>
-
       <ul class="password-requirements" id="requirements">
-        <li id="length" style="color: red;"><span class="emoji">❌</span> At least 8 characters</li>
-        <li id="number" style="color: red;"><span class="emoji">❌</span> At least one number</li>
-        <li id="special" style="color: red;"><span class="emoji">❌</span> At least one special character</li>
+        <li id="length" style="color: red;">
+          <i class="fas fa-times-circle requirement-icon"></i> At least 8 characters
+        </li>
+        <li id="number" style="color: red;">
+          <i class="fas fa-times-circle requirement-icon"></i> At least one number
+        </li>
+        <li id="special" style="color: red;">
+          <i class="fas fa-times-circle requirement-icon"></i> At least one special character
+        </li>
       </ul>
-      
 
-      <div class="form-group">
+
+      <div class="form-group"> 
         <label for="confirm_password">Confirm Password</label>
-        <span class="form-icon">✅</span>
+        <span class="form-icon">
+          <i id="match-icon" class="fas fa-check-circle"></i>
+        </span>
         <input type="password" name="confirm_password" id="confirm_password" placeholder="Confirm password" required />
-        <span class="toggle-password" onclick="toggleVisibility(this, 'confirm_password')" data-visible="false">🙈</span>
-
+        <span class="toggle-password" onclick="toggleVisibility(this, 'confirm_password')" data-visible="false">
+          <i class="fas fa-eye-slash"></i>
+        </span>
       </div>
-
       <p id="error">Passwords do not match.</p>
       <button type="submit" class="btn">Reset Password</button>
     </form>
@@ -248,16 +256,18 @@ if (isset($_SESSION['account_loggedin'])) {
 
   <script>
     // Toggle password visibility
-    function toggleVisibility(toggleIcon, fieldId) {
-      const input = document.getElementById(fieldId);
+    function toggleVisibility(toggleIcon, inputId) {
+      const input = document.getElementById(inputId);
+      const icon = toggleIcon.querySelector("i");
       const isVisible = toggleIcon.getAttribute("data-visible") === "true";
 
-    input.type = isVisible ? "password" : "text";
-    toggleIcon.setAttribute("data-visible", !isVisible);
-    toggleIcon.textContent = isVisible ? "🙈" : "👁️";
-  }
+      input.type = isVisible ? "password" : "text";
+      toggleIcon.setAttribute("data-visible", !isVisible);
 
-
+      icon.classList.remove(isVisible ? "fa-eye" : "fa-eye-slash");
+      icon.classList.add(isVisible ? "fa-eye-slash" : "fa-eye");
+    }
+    
     // Password match and requirement check
     document.querySelector("form").addEventListener("submit", function (e) {
       const pass = document.getElementById("new_password").value;
@@ -282,6 +292,7 @@ if (isset($_SESSION['account_loggedin'])) {
       }
     });
 
+
     // Password requirements validation
     document.getElementById("new_password").addEventListener("input", function () {
       const value = this.value;
@@ -291,9 +302,10 @@ if (isset($_SESSION['account_loggedin'])) {
       const specialEl = document.getElementById("special");
 
       const updateRequirement = (el, isValid) => {
+      const icon = el.querySelector(".requirement-icon");
         el.style.color = isValid ? "green" : "red";
-        el.querySelector(".emoji").textContent = isValid ? "✅" : "❌";
-    };
+        icon.className = isValid ? "fas fa-check-circle requirement-icon" : "fas fa-times-circle requirement-icon";
+      };
 
       updateRequirement(lengthEl, value.length >= 8);
       updateRequirement(numberEl, /\d/.test(value));
@@ -307,5 +319,6 @@ if (isset($_SESSION['account_loggedin'])) {
       themeIcon.textContent = document.body.classList.contains("dark") ? "☀️" : "🌙";
     }
   </script>
+
 </body>
 </html>
