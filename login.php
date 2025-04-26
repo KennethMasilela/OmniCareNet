@@ -19,7 +19,6 @@ if (isset($_SESSION['success_message'])) {
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>OmniCareNet Login</title>
-  <link rel="stylesheet" href="style.css" />
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
   <style>
     * {
@@ -179,6 +178,23 @@ if (isset($_SESSION['success_message'])) {
       border: none;
       cursor: pointer;
     }
+
+    .success {
+    background-color: #d4edda;
+    color: #155724;
+    padding: 10px;
+    border-radius: 5px;
+    text-align: center;
+    margin-bottom: 10px;
+    animation: fadeOut 3s forwards;
+  }
+
+  @keyframes fadeOut {
+    0% { opacity: 1; }
+    80% { opacity: 1; }
+    100% { opacity: 0; display: none; }
+  }
+
   </style>
 </head>
 <body>
@@ -196,7 +212,6 @@ if (isset($_SESSION['success_message'])) {
     <?php endif; ?>
 
     <h2>Welcome to OmniCareNet</h2>
-
     <?php
       $errorMessage = '';
       if (isset($_GET['error']) && $_GET['error'] === 'invalid') {

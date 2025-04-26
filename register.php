@@ -1,11 +1,17 @@
-<?php session_start(); ?> 
+<?php session_start(); 
+// Redirect if already logged in
+if (isset($_SESSION['account_loggedin'])) {
+    header('Location: home.php');
+    exit;
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Register - OmniCareNet</title>
-  <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
     * {
@@ -34,13 +40,14 @@
       display: flex;
       flex-wrap: wrap;
       gap: -10px;
-      background-color: #ffffffee;
+      background-color: rgba(255, 255, 255, 0.85); /* More readable and still transparent */
       padding: 28px;
       border-radius: 13px;
       box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
       max-width: 780px;
       width: 95%;
     }
+
 
     body.dark .register-container {
       background-color: #2e2e3f;
@@ -102,7 +109,7 @@
     .toggle-password {
       position: absolute;
       top: 66%;
-      right: 6px;
+      right: 90px;
       transform: translateY(-50%);
       cursor: pointer;
       font-size: 16px;
@@ -205,10 +212,8 @@
 <body>
 
   <button class="theme-toggle" title="Toggle theme" onclick="toggleTheme()" id="theme-icon">🌙</button>
-
-  <form id="registerForm" class="register-container" action="register_handler.php" method="POST">
+  <form action="register_handler.php" method="post" id="registerForm" class="register-container">
     <h2>Create Your Account</h2>
-
     <!-- Column 1 -->
     <div class="form-section">
       <div class="form-group">
@@ -257,9 +262,9 @@
       </div>
 
       <div class="form-group">
-        <label for="hospital_id">Hospital</label>
+        <label for="hospital_name">Hospital</label>
         <span class="form-icon"><i class="fas fa-hospital"></i></span>
-        <select name="hospital_id" id="hospital_id" required onchange="toggleOtherHospitalField()">
+        <select name="hospital_users_name" id="hospital_name" required onchange="toggleOtherHospitalField()">
           <option value="">Select hospital</option>
           <option value="Chris Hani Baragwanath Academic Hospital">Chris Hani Baragwanath Academic Hospital</option>
           <option value="Steve Biko Academic Hospital">Steve Biko Academic Hospital</option>
@@ -287,6 +292,7 @@
       <div class="form-group" id="other-hospital-group" style="display: none;">
         <label for="other_hospital">Specify Hospital</label>
         <input type="text" name="other_hospital" id="other_hospital" placeholder="Enter hospital name" />
+        <span class="form-icon"><i class="fas fa-hospital"></i></span>
       </div>
 
 
@@ -373,7 +379,7 @@
   </script>
   <script>
     function toggleOtherHospitalField() {
-      const hospitalSelect = document.getElementById('hospital_id');
+      const hospitalSelect = document.getElementById('hospital_name');
       const otherHospitalGroup = document.getElementById('other-hospital-group');
       otherHospitalGroup.style.display = hospitalSelect.value === 'Other' ? 'block' : 'none';
     }
