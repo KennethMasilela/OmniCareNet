@@ -176,5 +176,15 @@ if (isset($_SESSION['account_loggedin'])) {
     }
   </script>
 
+  <script>
+    window.onload = function () {
+      const msg = document.getElementById('message-box');
+      if (msg) {
+        setTimeout(() => {
+          msg.style.display = 'none';
+        }, 5000); // 5000 ms = 5 seconds
+      }
+    };
+  </script>
 </body>
 </html>

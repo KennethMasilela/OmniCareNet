@@ -93,11 +93,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             $hospital_name
         ]);
 
-        $_SESSION['success'] = "Registration successful! You can now log in.";
+        $_SESSION['success_message'] = "✅ Registration successful! You can now log in.";
         header("Location: login.php");
         exit();
     } else {
-        $_SESSION['error'] = "Registration failed. Please try again.";
+        $_SESSION['error'] = "❌ Registration failed. Please try again.";
         header("Location: register.php");
         exit();
     }

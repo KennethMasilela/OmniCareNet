@@ -7,10 +7,10 @@ $password = 'K3nneth36812!';  // your MySQL password
 try {
     $pdo = new PDO("mysql:host=$host;dbname=$dbname;port=3306", $username, $password);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    echo "✅ Connected to OmniCareNet database!";
+    // For dev only:
+    // echo "✅ Connected to OmniCareNet database!";
 } catch (PDOException $e) {
-    die("❌ Connection failed: " . $e->getMessage());
+    // Don't expose details to users
+    error_log("DB connection error: " . $e->getMessage());
+    die("❌ Unable to connect to the database. Please try again later.");
 }
-?>
-
-
