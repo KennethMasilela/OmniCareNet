@@ -6,11 +6,6 @@ if (isset($_SESSION['account_loggedin'])) {
     header('Location: home.php');
     exit;
 }
-
-if (isset($_SESSION['success_message'])) {
-  echo '<div class="success-message">' . $_SESSION['success_message'] . '</div>';
-  unset($_SESSION['success_message']); // Clear the message after displaying it
-}
 ?>
 
 <!DOCTYPE html>
@@ -202,15 +197,11 @@ if (isset($_SESSION['success_message'])) {
   <button class="theme-toggle" title="Toggle theme">🌙</button>
 
   <div class="login-container">
-    
-    <!-- ✅ Success Message -->
     <?php if (isset($_SESSION['success_message'])): ?>
       <div class="success">
-        <?= $_SESSION['success_message']; ?>
-        <?php unset($_SESSION['success_message']); ?>
+        <?= $_SESSION['success_message']; unset($_SESSION['success_message']); ?>
       </div>
     <?php endif; ?>
-
     <h2>Welcome to OmniCareNet</h2>
     <?php
       $errorMessage = '';

@@ -40,7 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $stmt->execute();
 
         // Send email with reset link
-        $resetLink = "http://yourdomain.com/change_password.php?token=" . $token;
+        $resetLink = "http://localhost/OmniCareNet/change_password.php?token=" . $token;
 
         $mail = new PHPMailer(true);
 
@@ -50,17 +50,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $mail->Host = 'smtp.gmail.com'; // your SMTP server
             $mail->SMTPAuth = true;
             $mail->Username = 'kennethmasilela.githubproject@gmail.com'; // your email
-            $mail->Password = 'K3nneth36812!';    // your app password
+            $mail->Password = 'fstljdzeaxpvqlsy';    // your app password
             $mail->SMTPSecure = 'tls';
             $mail->Port = 587;
 
             // Recipients
-            $mail->setFrom('your_email@gmail.com', 'OmniCareNet');
+            $mail->setFrom('kennethmasilela.githubproject@gmail.com', 'OmniCareNet');
             $mail->addAddress($email);
 
             // Content
             $mail->isHTML(true);
-            $mail->Subject = '🔐 Password Reset Request';
+            $mail->Subject = 'Password Reset Request';
             $mail->Body = "
                 <p>Hello,</p>
                 <p>You requested to reset your password. Click the link below to proceed:</p>
