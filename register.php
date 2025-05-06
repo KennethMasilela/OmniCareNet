@@ -217,7 +217,7 @@ if (isset($_SESSION['account_loggedin'])) {
     <!-- Column 1 -->
     <div class="form-section">
       <div class="form-group">
-        <label for="first_name">First Name</label>
+        <label for="first_name">First Name(s)</label>
         <span class="form-icon"><i class="fas fa-user"></i></span>
         <input type="text" name="first_name" id="first_name" placeholder="Enter your first name" required />
       </div>
